@@ -1,4 +1,4 @@
-# ISS-CW2
+# ISS-CW2 - TEAM NAME: KILO2
 
 1. Adapt the VPN netkit laboratory, used during
 the teaching sessions to represent your
