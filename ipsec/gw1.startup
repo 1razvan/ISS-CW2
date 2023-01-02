@@ -1,0 +1,5 @@
+### gw1 Startup File ###
+
+ip link set dev eth0 address 01:gw:01:gw:01:gw
+ip addr add 213.1.133.98 dev eth0
+ip link set up dev eth0

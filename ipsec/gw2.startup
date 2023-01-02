@@ -1,0 +1,5 @@
+### gw2 Startup File ###
+
+ip link set dev eth0 address 02:gw:02:gw:02:gw
+ip addr add 213.1.133.99 dev eth0
+ip link set up dev eth0
