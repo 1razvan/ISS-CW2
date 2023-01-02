@@ -1,0 +1,2 @@
+# Ignore VM disk files, they are far too big
+*.disk
