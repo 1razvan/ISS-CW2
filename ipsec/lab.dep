@@ -1,0 +1,8 @@
+# start internet before vpn gateways so we can capture any intial IKE material
+rA: internet
+rB: internet
+
+# start host machines at same time as their vpn gateways
+# a:  rA
+# b:  rB
+
