@@ -13,4 +13,7 @@ sysctl -p
 # provide FQDN resolution for rA and rB by appending to hosts file on all machines
 echo "192.0.2.2 rA.cyber.test"  >> /etc/hosts
 echo "198.51.100.2 rB.cyber.test"  >> /etc/hosts
+echo "213.1.133.98 gw1.kilo2.cyber.test"  >> /etc/hosts
+echo "213.1.133.99 gw2.kilo2.cyber.test"  >> /etc/hosts
+echo "213.1.133.100 www.kilo2.cyber.test"  >> /etc/hosts
 
