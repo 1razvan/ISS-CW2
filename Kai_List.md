@@ -1,4 +1,4 @@
-# Kai's list of CLarification
+# Kai's list of Clarification
 
 
 ## Context
