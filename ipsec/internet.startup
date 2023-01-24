@@ -12,6 +12,10 @@ ip link set up dev eth10
 ip addr add 198.51.100.1/24 dev eth11
 ip link set up dev eth11
 
+# Added for warwick network
+ip addr add 213.1.133.97/27 dev eth9
+ip link set up dev eth9
+
 iptables -t nat -A POSTROUTING -o eth20 -j MASQUERADE
 
 # capture initial IKE exchange (20 packets max) on eth10 using our custom tcpdump20 service
