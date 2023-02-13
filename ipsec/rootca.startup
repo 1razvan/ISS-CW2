@@ -1,0 +1,48 @@
+ip link set dev eth0 address ca:a1:b1:c1:ca:a2
+ip addr add 192.168.87.5/24 dev eth0
+ip link set up dev eth0
+
+# generate the CA key Using curve25519
+
+cd /etc/ipsec.d/
+
+# generate root CA's private key 
+openssl genpkey -algorithm ED25519 -out private/rootCA_Key.pem
+
+chmod 600 private/rootCA_Key.pem
+
+# generate root CA's self-signed cert, related to the private key
+openssl req -key private/rootCA_Key.pem -new -x509 -days 3650 -out cacerts/rootCA_Cert.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Root CA"
+
+# verify it looks right
+#openssl x509 -in cacerts/CA_Cert.pem -text -noout
+
+
+# generate the private key for gw1
+openssl genpkey -algorithm ED25519 -out private/vpn_gw1_Key.pem
+
+chmod 600 private/vpn_gw1_Key.pem
+
+# generate the related cert signing request
+openssl req -key private/vpn_gw1_Key.pem -new -out reqs/vpn_gw1_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Wireguard CA"
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+openssl x509 -req -in reqs/vpn_gw1_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -days 1825 -out certs/vpn_gw1_Cert.pem -extfile <(echo -e "subjectAltName=IP:192.168.87.1")
+
+
+# generate the private key for gw2
+openssl genpkey -algorithm ED25519 -out private/vpn_gw2_Key.pem
+  
+chmod 600 private/vpn_gw2_Key.pem
+
+# generate the related cert signing request
+openssl req -key private/vpn_gw2_Key.pem -new -out reqs/vpn_gw2_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Strongswan CA"
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+openssl x509 -req -in reqs/vpn_gw2_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -days 1825 -out certs/vpn_gw2_Cert.pem -extfile <(echo -e "subjectAltName=IP:192.168.87.2")

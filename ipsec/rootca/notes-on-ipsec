@@ -10,7 +10,7 @@ cd /etc/ipsed.d/
 # generate root CA's private key 
 pki --gen \
   --type ed25519 \
-  --outform der > private/CA_Key.der
+  --outform der > etc/ipsec.d/private/CA_Key.der
   
 chmod 600 private/CA_Key.der
 

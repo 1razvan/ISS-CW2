@@ -15,3 +15,35 @@ iptables -t nat -A POSTROUTING -s 192.168.87.0/24 -o eth0 -j MASQUERADE
 iptables -t nat -A POSTROUTING -s 10.90.90.0/24 -o eth0 -j MASQUERADE
 
 wg-quick up gateway0
+
+
+# generate the private key for one end of the vpn
+pki --gen \
+  --type ed25519 \
+  --outform der > private/vpn_gw1_Key.der
+  
+chmod 600 private/vpn_gw1_Key.der
+
+# generate the related cert signing request
+pki --pub \
+  --in private/vpn_gw1_Key.der \
+  --type ecdsa \
+  --outform der > reqs/vpn_gw1_csr.der
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+pki --issue \
+  --in reqs/vpn_gw1_csr.der \
+  --lifetime 1825 \
+  --cacert cacerts/CA_Cert.der \
+  --cakey private/CA_Key.der \
+  --dn "C=UK, O=Uni of Warwick, OU=CSC Teaching Examples, CN=gw1.cyber.test" \
+  --san 192.168.87.5  \
+  --flag serverAuth \
+  --flag ikeIntermediate \
+  --outform der > certs/vpn_gw1_Cert.der
+  
+# see how it looks
+pki --print --in certs/vpn_rA_Cert.der
