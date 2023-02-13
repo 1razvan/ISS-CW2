@@ -10,7 +10,7 @@ openssl genpkey -algorithm ED25519  -out private/web_CAKey.pem
 # Create a certificate signing request (CSR) for the web CA server
 openssl req -key private/web_CAKey.pem -new -out web_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Web CA"
 
-openssl x509 -req -in rootCA_Cert.pem -CA rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out web_Cert.pem
+openssl x509 -req -in web_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/web_Cert.pem
 
 
 # generate the private key for apache server
@@ -25,6 +25,4 @@ openssl req -key private/apache_CAKey.pem -new -out reqs/apache_csr.pem -subj "/
 # then get it signed / issued as a certificate by the CA
 # note the common name CN or the subject alternate name (--san)
 # MUST match the public domain name or ip addr of the server
-openssl x509 -req -in reqs/apache_csr.pem -CA cacerts/web_Cert.pem -CAkey private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/apache_Cert.pem -extfile <(echo -e "subjectAltName=IP:213.1.133.100")
-
-with the command: Have the root CA sign the CSR for the intermediate CA to create an intermediate CA certificate you put in a previous answer. Does this go in the root ca server or intermediate server
+openssl x509 -req -in reqs/apache_csr.pem -CA cacerts/web_Cert.pem -CAkey private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/apache.pem -extfile <(echo -e "subjectAltName=IP:213.1.133.100")
