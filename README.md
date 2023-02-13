@@ -22,3 +22,11 @@ appropriate HTTPS server configuration.
 configurations work correctly.
 
 7. Use your personal GPG keys appropriately.
+
+
+
+
+
+
+### TO TEST THAT HTTPS IS WORKING FROM ANY MACHINE###
+openssl s_client -connect www.kilo2.cyber.test:443 </dev/null 2>/dev/null | openssl x509 -inform pem -text
