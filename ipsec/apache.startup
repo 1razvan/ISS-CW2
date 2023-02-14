@@ -17,17 +17,23 @@ systemctl restart apache2
 
 ### TO TEST CERTIFICATE: openssl s_client -connect www.kilo2.cyber.test:443 </dev/null 2>/dev/null | openssl x509 -inform pem -text ###
 
+#mkdir private/
+#mkdir reqs/
+#mkdir certs/
 
 # generate the private key for apache server
-#openssl genpkey -algorithm ED25519 -out private/apache_CAKey.pem
+#openssl genpkey -algorithm ED25519 -out private/www.kilo2.cyber.test.pem
   
-#chmod 600 private/apache_CAKey.pem
+#chmod 600 private/www.kilo2.cyber.test.pem
 
 # generate the related cert signing request
-#openssl req -key private/apache_CAKey.pem -new -out reqs/apache_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Apache CA"
+#openssl req -key private/www.kilo2.cyber.test.pem -new -out reqs/www.kilo2.cyber.test.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=www.kilo2.cyber.test"
 
 ################################################
 # then get it signed / issued as a certificate by the CA
 # note the common name CN or the subject alternate name (--san)
 # MUST match the public domain name or ip addr of the server
-#openssl x509 -req -in reqs/apache_csr.pem -CA cacerts/web_Cert.pem -CAkey private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/apache.pem -extfile <(echo -e "subjectAltName=IP:213.1.133.100")
+#openssl x509 -req -extensions SAN -extfile <(printf "\n[SAN]\nsubjectAltName=IP:213.1.133.100") -in reqs/www.kilo2.cyber.test.pem -CA /etc/ipsec.d/cacerts/web_Cert.pem -CAkey /etc/ipsec.d/private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/www.kilo2.cyber.test.pem 
+
+#cp private/www.kilo2.cyber.test.pem /hostlab/apache/etc/ipsec.d/private/
+#cp certs/www.kilo2.cyber.test.pem /hostlab/apache/etc/ipsec.d/certs/

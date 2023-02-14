@@ -17,3 +17,5 @@ echo "213.1.133.98 gw1.kilo2.cyber.test"  >> /etc/hosts
 echo "213.1.133.99 gw2.kilo2.cyber.test"  >> /etc/hosts
 echo "213.1.133.100 www.kilo2.cyber.test"  >> /etc/hosts
 
+
+update-ca-certificates
