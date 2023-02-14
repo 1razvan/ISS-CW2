@@ -3,45 +3,14 @@ ip addr add 192.168.87.6/24 dev eth0
 ip link set up dev eth0
 
 
-cd /etc/ipsec.d/
+# cd /etc/ipsec.d/
 
 # Generate a private key for the vpn CA server
-openssl genpkey -algorithm ED25519  -out private/vpn_CAKey.pem
+# openssl genpkey -algorithm ED25519  -out private/vpn_CAKey.pem
 
 # Create a certificate signing request (CSR) for the vpn CA server
-openssl req -key private/vpn_CAKey.pem -new -out vpn_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=VPN CA"
+# openssl req -key private/vpn_CAKey.pem -new -out reqs/vpn_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=VPN CA"
 
-openssl x509 -req -in vpn_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/vpn_Cert.pem
-
-
+# openssl x509 -req -in reqs/vpn_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/vpn_Cert.pem
 
 
-
-# generate the private key for gw1
-openssl genpkey -algorithm ED25519 -out private/vpn_gw1_CAKey.pem
-
-chmod 600 private/vpn_gw1_CAKey.pem
-
-# generate the related cert signing request
-openssl req -key private/vpn_gw1_CAKey.pem -new -out reqs/vpn_gw1_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Wireguard CA"
-
-################################################
-# then get it signed / issued as a certificate by the CA
-# note the common name CN or the subject alternate name (--san)
-# MUST match the public domain name or ip addr of the server
-openssl x509 -req -in reqs/vpn_gw1_csr.pem -CA cacerts/vpn_Cert.pem -CAkey private/vpn_CAKey.pem -CAcreateserial -days 1825 -out certs/vpn_gw1_Cert.pem -extfile <(echo -e "subjectAltName=IP:192.168.87.1")
-
-
-# generate the private key for gw2
-openssl genpkey -algorithm ED25519 -out private/vpn_gw2_CAKey.pem
-  
-chmod 600 private/vpn_gw2_CAKey.pem
-
-# generate the related cert signing request
-openssl req -key private/vpn_gw2_CAKey.pem -new -out reqs/vpn_gw2_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Strongswan CA"
-
-################################################
-# then get it signed / issued as a certificate by the CA
-# note the common name CN or the subject alternate name (--san)
-# MUST match the public domain name or ip addr of the server
-openssl x509 -req -in reqs/vpn_gw2_csr.pem -CA cacerts/vpn_Cert.pem -CAkey private/vpn_CAKey.pem -CAcreateserial -days 1825 -out certs/vpn_gw2_Cert.pem -extfile <(echo -e "subjectAltName=IP:192.168.87.2")

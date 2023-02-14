@@ -16,3 +16,18 @@ systemctl restart apache2
 
 
 ### TO TEST CERTIFICATE: openssl s_client -connect www.kilo2.cyber.test:443 </dev/null 2>/dev/null | openssl x509 -inform pem -text ###
+
+
+# generate the private key for apache server
+#openssl genpkey -algorithm ED25519 -out private/apache_CAKey.pem
+  
+#chmod 600 private/apache_CAKey.pem
+
+# generate the related cert signing request
+#openssl req -key private/apache_CAKey.pem -new -out reqs/apache_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Web CA"
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+#openssl x509 -req -in reqs/apache_csr.pem -CA cacerts/web_Cert.pem -CAkey private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/apache.pem -extfile <(echo -e "subjectAltName=IP:213.1.133.100")
