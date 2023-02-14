@@ -10,4 +10,4 @@ cd /etc/ipsec.d/
 # Create a certificate signing request (CSR) for the web CA server
 # openssl req -key private/web_CAKey.pem -new -out reqs/web_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Web CA"
 
-# openssl x509 -req -in reqs/web_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/web_Cert.pem
+# openssl x509 -req -in reqs/web_csr.pem -extfile ca.conf -extensions v3_ca -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/web_Cert.pem

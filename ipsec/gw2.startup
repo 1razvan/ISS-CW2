@@ -12,7 +12,7 @@ ip route add default via 213.1.133.97
 
 iptables -t nat -A POSTROUTING -s 192.168.87.0/24 -o eth0 -j MASQUERADE
 
-ipsec start
+systemctl start ipsec
 
 # generate the private key for gw2
 # openssl genpkey -algorithm ED25519 -out private/vpn_gw2_CAKey.pem

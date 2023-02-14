@@ -18,14 +18,14 @@ wg-quick up gateway0
 
 
 # generate the private key for one end of the vpn
-pki --gen \
+#pki --gen \
   --type ed25519 \
   --outform der > private/vpn_gw1_Key.der
   
-chmod 600 private/vpn_gw1_Key.der
+#chmod 600 private/vpn_gw1_Key.der
 
 # generate the related cert signing request
-pki --pub \
+#pki --pub \
   --in private/vpn_gw1_Key.der \
   --type ecdsa \
   --outform der > reqs/vpn_gw1_csr.der
@@ -33,8 +33,8 @@ pki --pub \
 ################################################
 # then get it signed / issued as a certificate by the CA
 # note the common name CN or the subject alternate name (--san)
-# MUST match the public domain name or ip addr of the server
-pki --issue \
+## MUST match the public domain name or ip addr of the server
+#pki --issue \
   --in reqs/vpn_gw1_csr.der \
   --lifetime 1825 \
   --cacert cacerts/CA_Cert.der \
@@ -46,7 +46,7 @@ pki --issue \
   --outform der > certs/vpn_gw1_Cert.der
   
 # see how it looks
-pki --print --in certs/vpn_rA_Cert.der
+#pki --print --in certs/vpn_rA_Cert.der
 
 
 

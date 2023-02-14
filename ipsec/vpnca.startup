@@ -11,6 +11,6 @@ ip link set up dev eth0
 # Create a certificate signing request (CSR) for the vpn CA server
 # openssl req -key private/vpn_CAKey.pem -new -out reqs/vpn_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=VPN CA"
 
-# openssl x509 -req -in reqs/vpn_csr.pem -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/vpn_Cert.pem
+# openssl x509 -req -in reqs/vpn_csr.pem -extfile ca.conf -extensions v3_ca -CA cacerts/rootCA_Cert.pem -CAkey private/rootCA_Key.pem -CAcreateserial -out cacerts/vpn_Cert.pem
 
 

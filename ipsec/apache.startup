@@ -24,7 +24,7 @@ systemctl restart apache2
 #chmod 600 private/apache_CAKey.pem
 
 # generate the related cert signing request
-#openssl req -key private/apache_CAKey.pem -new -out reqs/apache_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Web CA"
+#openssl req -key private/apache_CAKey.pem -new -out reqs/apache_csr.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Apache CA"
 
 ################################################
 # then get it signed / issued as a certificate by the CA
