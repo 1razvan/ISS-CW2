@@ -1,6 +1,8 @@
-ip link set dev eth0 address ca:a1:b1:c1:ca:a2
-ip addr add 192.168.87.5/24 dev eth0
+ip addr add 192.168.87.5/25 dev eth0
 ip link set up dev eth0
+
+ip route add default via 192.168.87.3
+ip route add 192.168.87.128/25 via 192.168.87.4
 
 # generate the CA key Using curve25519
 
