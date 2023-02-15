@@ -9,5 +9,6 @@ ip addr add 192.168.87.129/25 dev eth1
 ip link set up dev eth1
 
 ip route add default via 192.168.87.3
+ip route add 10.2.2.0/25 via 192.168.87.2
 
 
