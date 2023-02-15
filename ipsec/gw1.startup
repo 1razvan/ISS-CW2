@@ -11,7 +11,6 @@ ip link set up dev eth1
 ip route add default via 213.1.133.97
 ip route add 192.168.87.128/25 via 192.168.87.4
 
-
 #iptables -t nat -A POSTROUTING -s 10.90.90.0/24 -o eth0 -j MASQUERADE
 
 wg-quick up gateway0
