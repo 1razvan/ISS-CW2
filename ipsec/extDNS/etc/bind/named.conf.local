@@ -9,4 +9,6 @@
 zone "cyber.test" {
 	type master;
 	file "/etc/bind/zones/db.cyber.test";
+	auto-dnssec maintain;
+	inline-signing yes;
 };

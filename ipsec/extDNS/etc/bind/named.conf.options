@@ -26,8 +26,12 @@ options {
 
 	#listen-on-v6 { any; };
 
-	#dnssec-enable yes;
-	#dnssec-validation yes;
-	#dnssec-lookaside auto;
+	dnssec-enable yes;
+	dnssec-validation yes;
+	dnssec-lookaside auto;
+
+	key-directory "/etc/bind/keys";
+	dnssec-dnskey-kskonly yes;
+	sig-validity-interval 21 16;
 };
 

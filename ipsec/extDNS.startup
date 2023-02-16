@@ -5,6 +5,12 @@ ip link set up dev eth0
 
 ip route add default via 186.25.1.1
 
+chown -R bind:bind /etc/bind/keys
+chown -R bind:bind /etc/bind/zones
+
 #service dnsmasq start
 systemctl start named
+
+# If needed, for DNSSEC: rndc reconfig
+
 
