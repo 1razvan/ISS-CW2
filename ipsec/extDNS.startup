@@ -12,5 +12,7 @@ chown -R bind:bind /etc/bind/zones
 systemctl start named
 
 # If needed, for DNSSEC: rndc reconfig
+# TEST DNSSEC:
+#	dig [domain] +dnssec
 
 
