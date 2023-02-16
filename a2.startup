@@ -1,0 +1,13 @@
+###############################
+#
+# a2.startup
+#
+###############################
+
+ip link set dev eth0 address 02:a2:a2:a2:a2:a2
+ip addr add 172.28.97.43/29 dev eth0
+ip link set up dev eth0
+
+ip route add default via 172.28.97.41
+
+# wg-quick up wg0

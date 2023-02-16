@@ -1,0 +1,17 @@
+###############################
+#
+# rB.startup
+#
+###############################
+
+ip link set dev eth1 address 02:bb:bb:11:11:11
+ip link set dev eth2 address 02:bb:bb:22:22:22
+
+ip addr add 10.0.0.1/27 dev eth1
+ip link set up dev eth1
+ip addr add 198.51.100.2/24 dev eth2
+ip link set up dev eth2
+
+ip route add default via 198.51.100.1
+
+iptables -t nat -A POSTROUTING -o eth2 -j MASQUERADE

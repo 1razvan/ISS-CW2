@@ -1,0 +1,29 @@
+###############################
+#
+# internet.startup
+#
+###############################
+
+ip link set dev eth9 address 02:00:00:09:09:09
+ip link set dev eth10 address 02:00:00:10:10:10
+ip link set dev eth11 address 02:00:00:11:11:11
+ip link set dev eth12 address 02:00:00:12:12:12
+
+ip addr add 192.0.2.1/24 dev eth10
+ip link set up dev eth10
+ip addr add 198.51.100.1/24 dev eth11
+ip link set up dev eth11
+
+# Added for warwick network
+ip addr add 213.1.133.97/27 dev eth9
+ip link set up dev eth9
+
+# Added for DNS network
+ip addr add 186.25.1.1/24 dev eth12
+ip link set up dev eth12
+
+
+# capture initial IKE exchange (20 packets max) on eth10 using our custom tcpdump20 service
+# definitions of custom services are in shared/usr/lib/systemd/system/*.service
+# pcap file will be in <hostlab-dir>/.output/
+systemctl start tcpdump20@eth10

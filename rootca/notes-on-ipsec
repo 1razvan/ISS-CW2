@@ -1,0 +1,100 @@
+######################################
+## on the CA machine (probably offline)
+# generate the CA key
+
+# The machine where this key generation occurs needs the following package:
+# sudo apt-get install strongswan-pki
+
+cd /etc/ipsed.d/
+
+# generate root CA's private key 
+pki --gen \
+  --type ed25519 \
+  --outform der > etc/ipsec.d/private/CA_Key.der
+  
+chmod 600 private/CA_Key.der
+
+# generate root CA's self-signed cert, related to the private key
+pki --self --ca \
+  --lifetime 3650 \
+  --in private/CA_Key.der \
+  --type ed25519 \
+  --dn "C=UK, O=University of Warwick, OU=Cyber Security Centre (Teaching), CN=CSC Untrustworthy Example CA" \
+  --outform der > cacerts/CA_Cert.der
+
+# verify it looks right
+pki --print --in cacerts/CA_Cert.der
+
+#########################################
+## for one end of the VPN (rA in our case)
+
+# generate the private key for one end of the vpn
+pki --gen \
+  --type ed25519 \
+  --outform der > private/vpn_rA_Key.der
+  
+chmod 600 private/vpn_rA_Key.der
+
+# generate the related cert signing request
+pki --pub \
+  --in private/vpn_rA_Key.der \
+  --type ecdsa \
+  --outform der > reqs/vpn_rA_csr.der
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+pki --issue \
+  --in reqs/vpn_rA_csr.der \
+  --lifetime 1825 \
+  --cacert cacerts/CA_Cert.der \
+  --cakey private/CA_Key.der \
+  --dn "C=UK, O=Uni of Warwick, OU=CSC Teaching Examples, CN=ra.cyber.test" \
+  --san 198.51.100.1  \
+  --flag serverAuth \
+  --flag ikeIntermediate \
+  --outform der > certs/vpn_rA_Cert.der
+  
+# see how it looks
+pki --print --in certs/vpn_rA_Cert.der
+
+# or with openssl
+openssl x509 -inform DER -in certs/vpn_rA_Cert.der -noout -text
+
+##################################
+# do similar for the other end of the vpn ie rB
+
+# generate the private key for other end of the vpn
+pki --gen \
+  --type ed25519 \
+  --outform der > private/vpn_rB_Key.der
+
+# generate the related cert signing request
+pki --pub \
+  --in private/vpn_rB_Key.der \
+  --type ecdsa \
+  --outform der > reqs/vpn_rB_csr.der
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+pki --issue \
+  --in reqs/vpn_rB_csr.der \
+  --lifetime 1825 \
+  --cacert cacerts/CA_Cert.der \
+  --cakey private/CA_Key.der \
+  --dn "C=UK, O=Uni of Warwick, OU=CSC Teaching Examples, CN=rb.cyber.test" \
+  --san 198.51.100.2  \
+  --flag serverAuth \
+  --flag ikeIntermediate \
+  --outform der > certs/vpn_rB_Cert.der
+  
+# see how it looks
+pki --print --in certs/vpn_rB_Cert.der
+
+# or with openssl
+openssl x509 -inform DER -in certs/vpn_rB_Cert.der -noout -text
+
+

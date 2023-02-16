@@ -1,0 +1,39 @@
+### apache Startup File ###
+
+ip link set dev eth0 address 0e:01:ee:01:ee:01
+ip addr add 213.1.133.100/27 dev eth0
+ip link set up dev eth0
+
+ip route add default via 213.1.133.97
+
+### enabling ssl on apache ###
+
+a2enmod ssl
+systemctl restart apache2
+a2ensite www.kilo2.cyber.test-ssl.conf
+systemctl reload apache2
+systemctl restart apache2
+
+
+### TO TEST CERTIFICATE: openssl s_client -connect www.kilo2.cyber.test:443 </dev/null 2>/dev/null | openssl x509 -inform pem -text ###
+
+#mkdir private/
+#mkdir reqs/
+#mkdir certs/
+
+# generate the private key for apache server
+#openssl genpkey -algorithm ED25519 -out private/www.kilo2.cyber.test.pem
+  
+#chmod 600 private/www.kilo2.cyber.test.pem
+
+# generate the related cert signing request
+#openssl req -key private/www.kilo2.cyber.test.pem -new -out reqs/www.kilo2.cyber.test.pem -subj "/C=UK/O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=www.kilo2.cyber.test"
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+#openssl x509 -req -extensions SAN -extfile <(printf "\n[SAN]\nsubjectAltName=IP:213.1.133.100") -in reqs/www.kilo2.cyber.test.pem -CA /etc/ipsec.d/cacerts/web_Cert.pem -CAkey /etc/ipsec.d/private/web_CAKey.pem -CAcreateserial -days 1825 -out certs/www.kilo2.cyber.test.pem 
+
+#cp private/www.kilo2.cyber.test.pem /hostlab/apache/etc/ipsec.d/private/
+#cp certs/www.kilo2.cyber.test.pem /hostlab/apache/etc/ipsec.d/certs/

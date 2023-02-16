@@ -1,0 +1,65 @@
+### gw1 Startup File ###
+
+ip link set dev eth0 address 02:b2:02:b2:01:b2
+ip addr add 213.1.133.98/27 dev eth0
+ip link set up dev eth0
+
+ip link set dev eth1 address 02:02:ac:ac:02:02
+ip addr add 192.168.87.1/25 dev eth1
+ip link set up dev eth1
+
+ip route add default via 213.1.133.97
+ip route add 192.168.87.128/25 via 192.168.87.4
+
+#iptables -t nat -A POSTROUTING -s 10.90.90.0/24 -o eth0 -j MASQUERADE
+
+wg-quick up gateway0
+
+
+# generate the private key for one end of the vpn
+#pki --gen \
+#  --type ed25519 \
+#  --outform der > private/vpn_gw1_Key.der
+  
+#chmod 600 private/vpn_gw1_Key.der
+
+# generate the related cert signing request
+#pki --pub \
+#  --in private/vpn_gw1_Key.der \
+#  --type ecdsa \
+#  --outform der > reqs/vpn_gw1_csr.der
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+## MUST match the public domain name or ip addr of the server
+#pki --issue \
+#  --in reqs/vpn_gw1_csr.der \
+#  --lifetime 1825 \
+#  --cacert cacerts/CA_Cert.der \
+#  --cakey private/CA_Key.der \
+#  --dn "C=UK, O=Uni of Warwick, OU=CSC Teaching Examples, CN=gw1.cyber.test" \
+#  --san 192.168.87.5  \
+#  --flag serverAuth \
+#  --flag ikeIntermediate \
+#  --outform der > certs/vpn_gw1_Cert.der
+  
+# see how it looks
+#pki --print --in certs/vpn_rA_Cert.der
+
+
+
+
+# generate the private key for gw1
+# openssl genpkey -algorithm ED25519 -out private/vpn_gw1_CAKey.pem
+
+# chmod 600 private/vpn_gw1_CAKey.pem
+
+# generate the related cert signing request
+# openssl req -key private/vpn_gw1_CAKey.pem -new -out reqs/vpn_gw1_csr.pem -subj "/C=UK O=University of Warwick/OU=Cyber Security Centre (Teaching)/CN=Wireguard CA"
+
+################################################
+# then get it signed / issued as a certificate by the CA
+# note the common name CN or the subject alternate name (--san)
+# MUST match the public domain name or ip addr of the server
+# openssl x509 -req -in reqs/vpn_gw1_csr.pem -CA cacerts/vpn_Cert.pem -CAkey private/vpn_CAKey.pem -CAcreateserial -days 1825 -out certs/vpn_gw1_Cert.pem -extfile <(echo -e "subjectAltName=IP:192.168.87.1")

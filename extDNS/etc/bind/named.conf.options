@@ -1,0 +1,37 @@
+options {
+	directory "/var/cache/bind";
+
+	listen-on { 186.25.1.2; 127.0.0.1; };
+	
+	allow-recursion { any; };
+	allow-query { any; };
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable 
+	// nameservers, you probably want to use them as forwarders.  
+	// Uncomment the following block, and insert the addresses replacing 
+	// the all-0's placeholder.
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+
+	#listen-on-v6 { any; };
+
+	dnssec-enable yes;
+	dnssec-validation yes;
+	dnssec-lookaside auto;
+
+	key-directory "/etc/bind/keys";
+	dnssec-dnskey-kskonly yes;
+	sig-validity-interval 21 16;
+};
+

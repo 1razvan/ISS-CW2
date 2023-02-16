@@ -1,0 +1,21 @@
+###############################
+#
+# shared.startup
+#
+###############################
+
+# disable IP6 by appending to sysctl.conf
+echo "net.ipv6.conf.all.disable_ipv6 = 1 # appended by shared.startup"  >> /etc/sysctl.conf
+
+# force modified sysctl.conf to be re-read
+sysctl -p
+
+# provide FQDN resolution for rA and rB by appending to hosts file on all machines
+#echo "192.0.2.2 rA.cyber.test"  >> /etc/hosts
+#echo "198.51.100.2 rB.cyber.test"  >> /etc/hosts
+#echo "213.1.133.98 gw1.kilo2.cyber.test"  >> /etc/hosts
+#echo "213.1.133.99 gw2.kilo2.cyber.test"  >> /etc/hosts
+#echo "213.1.133.100 www.kilo2.cyber.test"  >> /etc/hosts
+
+
+update-ca-certificates

@@ -1,0 +1,21 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	dns.cyber.test. admin.cyber.test. (
+			      3		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+
+	IN	NS	dns.cyber.test.
+
+dns.cyber.test.	IN	A	186.25.1.2
+rA.cyber.test.	IN	A	192.0.2.2
+rB.cyber.test.	IN	A	198.51.100.2
+gw1.kilo2.cyber.test.	IN	A	213.1.133.98
+gw2.kilo2.cyber.test.	IN	A	213.1.133.99
+gw3.kilo2.cyber.test.	IN	A	213.1.133.101
+www.kilo2.cyber.test.	IN	A	213.1.133.100
